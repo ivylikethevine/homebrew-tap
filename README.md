@@ -1,1 +1,5 @@
-Homebrew tap repo for github.com/ivylikethevine/say-hi
+# homebrew-tap
+
+```sh
+brew install ivylikethevine/tap/say-hi
+```
