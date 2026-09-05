@@ -1,5 +1,5 @@
 # The tap formula. Publish by copying this file to Formula/say-hi.rb in a repo
-# named ivylikethevine/homebrew-tap; `brew install ivy/tap/say-hi` then works with
+# named ivylikethevine/homebrew-tap; `brew install ivylikethevine/tap/say-hi` then works with
 # no review and no approval. A template on main: url/sha256 stay the v0.0.0
 # sentinel here permanently - a release's build job runs packaging/bump.sh
 # against its own copy (checksumming the tarball it built), and the result is
@@ -12,8 +12,8 @@ class SayHi < Formula
   # keep the "sshrc supercharged" phrasing, which no linter of theirs objects to
   desc "Your shell config, on every host you say hi to - sshrc supercharged"
   homepage "https://github.com/ivylikethevine/say-hi"
-  url "https://github.com/ivylikethevine/say-hi/releases/download/v0.1.5/say-hi-0.1.5.tar.gz"
-  sha256 "a5e99127ffe4cc773147befe899f1f8e3ae35788bc78e8da070303a13910fd7b"
+  url "https://github.com/ivylikethevine/say-hi/releases/download/v0.1.6/say-hi-0.1.6.tar.gz"
+  sha256 "cb7a62d2cef1341e3e79d7db5ee64ea550d5b6b942930fb25d52225a2b2af16c"
   license "MIT"
   head "https://github.com/ivylikethevine/say-hi.git", branch: "main"
 
