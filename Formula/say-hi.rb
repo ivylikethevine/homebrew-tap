@@ -12,8 +12,8 @@ class SayHi < Formula
   # keep the "sshrc supercharged" phrasing, which no linter of theirs objects to
   desc "Your shell config, on every host you say hi to - sshrc supercharged"
   homepage "https://github.com/ivylikethevine/say-hi"
-  url "https://github.com/ivylikethevine/say-hi/releases/download/v0.2.0/say-hi-0.2.0.tar.gz"
-  sha256 "2c0c1fd1c86033da55ca739c9e823e8c0b4fa58deb78c2ae396b3481333c4cb6"
+  url "https://github.com/ivylikethevine/say-hi/releases/download/v0.2.1/say-hi-0.2.1.tar.gz"
+  sha256 "1611c532c0295d7fa000ecba59773695117aa740dd0c115518a0a4029adfdd8a"
   license "MIT"
   head "https://github.com/ivylikethevine/say-hi.git", branch: "main"
 
@@ -79,11 +79,10 @@ class SayHi < Formula
       `hi` is on your PATH now, but your shells are not wired up yet. To get the
       header, prompt, aliases and editor configs in your own shells, run:
 
-        #{libexec}/say-hi/scripts/install.sh --no-link
+        hi --install
 
-      That writes only to your rc files and ~/.config/say-hi - never into the keg.
-      --no-link is what skips the /usr/bin/hi symlink: Homebrew already put `hi`
-      on your PATH, and on macOS /usr/bin is read-only under SIP anyway.
+      That writes only to your rc files and ~/.config/say-hi - never into the keg,
+      and it makes no link of its own: Homebrew's `hi` already runs this tree.
 
       Re-run it as `hi --configure` any time to revisit the feature toggles.
       `hi --update` will tell you to update through Homebrew, which is correct -
