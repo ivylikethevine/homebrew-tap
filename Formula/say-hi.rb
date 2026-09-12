@@ -12,8 +12,8 @@ class SayHi < Formula
   # keep the "sshrc supercharged" phrasing, which no linter of theirs objects to
   desc "Your shell config, on every host you say hi to - sshrc supercharged"
   homepage "https://github.com/ivylikethevine/say-hi"
-  url "https://github.com/ivylikethevine/say-hi/releases/download/v0.3.4/say-hi-0.3.4.tar.gz"
-  sha256 "7779b0ecf60e9fe28e59cb994f43487c79904825338b40bc4ec5261f606da3b0"
+  url "https://github.com/ivylikethevine/say-hi/releases/download/v0.3.5/say-hi-0.3.5.tar.gz"
+  sha256 "45291eadbaa86156a95af2e750733b057efa43a7dae143eb3f940e373bce2b44"
   license "MIT"
   head "https://github.com/ivylikethevine/say-hi.git", branch: "main"
 
@@ -77,7 +77,7 @@ class SayHi < Formula
   def caveats
     <<~EOS
       `hi` is on your PATH now, but your shells are not wired up yet. To get the
-      header, prompt, aliases and editor configs in your own shells, run:
+      header, prompt, aliases, and editor configs in your own shells, run:
 
         hi --install
 
