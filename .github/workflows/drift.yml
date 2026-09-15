@@ -38,6 +38,8 @@ jobs:
       contents: read
       issues: write # the one write: upsert (and close) its own tracking issue
     timeout-minutes: 5
+    env:
+      SAY_HI_REPO: ${{ github.repository_owner }}/say-hi
     steps:
       # audit mode: records egress without blocking it (no allowlist yet)
       - uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
@@ -53,7 +55,6 @@ jobs:
         env:
           # say-hi is public; the job token only lifts the API rate limit
           GH_TOKEN: ${{ github.token }}
-          SAY_HI_REPO: ${{ github.repository_owner }}/say-hi
         run: .github/scripts/formula_drift.sh Formula/say-hi.rb
 
       - id: issues
@@ -71,7 +72,6 @@ jobs:
         env:
           TAP_VERSION: ${{ steps.check.outputs.tap }}
           LATEST: ${{ steps.check.outputs.latest }}
-          SAY_HI_REPO: ${{ github.repository_owner }}/say-hi
         run: |
           set -euo pipefail
           say_hi="$GITHUB_SERVER_URL/$SAY_HI_REPO"
@@ -97,7 +97,7 @@ jobs:
           label-color: D93F0B
           label-description: Formula/say-hi.rb does not match say-hi's latest release
           title: Formula does not match say-hi's latest release
-          resolved: ${{ steps.check.outputs.drift == 'true' && 'false' || 'true' }}
+          resolved: ${{ steps.check.outputs.drift != 'true' }}
           close-comment: The formula matches say-hi's latest release again.
           resolved-when: the formula matches say-hi's latest release
           body-file: ${{ runner.temp }}/report.md

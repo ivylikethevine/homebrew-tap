@@ -32,8 +32,4 @@ fi
 drift=false
 [ "$tap" = "$latest" ] || drift=true
 
-out="$(printf 'tap=%s\nlatest=%s\ndrift=%s\n' "$tap" "$latest" "$drift")"
-echo "$out"
-if [ -n "${GITHUB_OUTPUT:-}" ]; then
-  echo "$out" >>"$GITHUB_OUTPUT"
-fi
+printf 'tap=%s\nlatest=%s\ndrift=%s\n' "$tap" "$latest" "$drift" | tee -a "${GITHUB_OUTPUT:-/dev/null}"

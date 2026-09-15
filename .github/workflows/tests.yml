@@ -50,30 +50,26 @@ jobs:
         name: Set up Homebrew
         uses: Homebrew/actions/setup-homebrew@1e34f2e2acaa766b7efacb8c26352e6abbb023f9 # 2026.09.13.1
 
-      - name: brew style
+      # every brew step below names the tap as $TAP
+      - name: Export the tap name
         env:
-          TAP: ${{ steps.setup.outputs.tap-name }}
+          TAP_NAME: ${{ steps.setup.outputs.tap-name }}
+        run: echo "TAP=$TAP_NAME" >>"$GITHUB_ENV"
+
+      - name: brew style
         run: brew style "$TAP"
 
       - name: brew audit --strict --online
-        env:
-          TAP: ${{ steps.setup.outputs.tap-name }}
         run: brew audit --strict --online "$TAP/say-hi"
 
       - name: brew install --build-from-source
-        env:
-          TAP: ${{ steps.setup.outputs.tap-name }}
         run: brew install --build-from-source "$TAP/say-hi"
 
       - name: brew test
-        env:
-          TAP: ${{ steps.setup.outputs.tap-name }}
         run: brew test "$TAP/say-hi"
 
       # uninstalling cleanly is part of what a user gets
       - name: brew uninstall
-        env:
-          TAP: ${{ steps.setup.outputs.tap-name }}
         run: brew uninstall "$TAP/say-hi"
 
   # One stable check name for branch protection, whatever the matrix holds.
