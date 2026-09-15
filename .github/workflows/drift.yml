@@ -1,0 +1,115 @@
+name: drift
+
+# Checks that Formula/say-hi.rb packages say-hi's latest release. Formula PRs
+# come from say-hi's release workflow, and one can sit unmerged, be closed, or
+# never be opened (its `tap` job skips without the HOMEBREW_TAP_TOKEN secret)
+# without anything here noticing. The signal is one tracking issue, kept
+# current: opened while the versions differ, rewritten on every later run,
+# closed the run they match.
+#
+# Issues may be disabled on this repo (bugs go to say-hi's tracker), and with
+# them off every `gh issue` call in the upsert fails. So the job asks the API
+# for `has_issues` first: on, the upsert runs; off, drift fails the job with an
+# ::error and the report in the step summary instead, so the red scheduled run
+# is the notification. Turning issues on needs no change here.
+#
+# Triggers: weekly, since say-hi releases land without a push here, and
+# dispatch for a re-check after merging a formula PR.
+
+on:
+  schedule:
+    - cron: "29 7 * * 1"
+  workflow_dispatch:
+
+# a dispatch can overlap the schedule; queue rather than cancel, since a run
+# cancelled mid-upsert can leave its issue half-written or a duplicate opened
+concurrency:
+  group: drift
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  formula:
+    name: formula version vs say-hi's latest release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write # the one write: upsert (and close) its own tracking issue
+    timeout-minutes: 5
+    steps:
+      # audit mode: records egress without blocking it (no allowlist yet)
+      - uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - id: check
+        name: Compare the formula's version to say-hi's latest release
+        env:
+          # say-hi is public; the job token only lifts the API rate limit
+          GH_TOKEN: ${{ github.token }}
+          SAY_HI_REPO: ${{ github.repository_owner }}/say-hi
+        run: .github/scripts/formula_drift.sh Formula/say-hi.rb
+
+      - id: issues
+        name: Check whether issues are enabled here
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          enabled="$(gh api "repos/$GITHUB_REPOSITORY" --jq .has_issues)"
+          echo "has_issues=$enabled"
+          echo "enabled=$enabled" >>"$GITHUB_OUTPUT"
+
+      - name: Compose the report, when there's drift to report
+        if: steps.check.outputs.drift == 'true'
+        env:
+          TAP_VERSION: ${{ steps.check.outputs.tap }}
+          LATEST: ${{ steps.check.outputs.latest }}
+          SAY_HI_REPO: ${{ github.repository_owner }}/say-hi
+        run: |
+          set -euo pipefail
+          say_hi="$GITHUB_SERVER_URL/$SAY_HI_REPO"
+          tap="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY"
+          {
+            echo "\`Formula/say-hi.rb\` packages say-hi **v$TAP_VERSION**, but say-hi's latest release is"
+            echo "[**v$LATEST**]($say_hi/releases/tag/v$LATEST)."
+            echo
+            echo "The expected fix is merging the pending \`say-hi-v$LATEST\` pull request that say-hi's"
+            echo "release workflow opened here, once its \`tests\` check passes:"
+            echo "[open pull requests]($tap/pulls?q=is%3Apr+is%3Aopen)."
+            echo
+            echo "If there is no such PR, re-run the \`tap\` job (\"open the Homebrew tap PR\") in say-hi's"
+            echo "Release run for v$LATEST ([Release runs]($say_hi/actions/workflows/release.yml)). That job skips"
+            echo "without the \`HOMEBREW_TAP_TOKEN\` secret, and stops at any existing PR on the"
+            echo "\`say-hi-v$LATEST\` branch, closed ones included, so reopen a closed PR instead."
+          } >"$RUNNER_TEMP/report.md"
+
+      - if: steps.issues.outputs.enabled == 'true'
+        uses: $/.github/actions/upsert-tracking-issue
+        with:
+          label: formula-drift
+          label-color: D93F0B
+          label-description: Formula/say-hi.rb does not match say-hi's latest release
+          title: Formula does not match say-hi's latest release
+          resolved: ${{ steps.check.outputs.drift == 'true' && 'false' || 'true' }}
+          close-comment: The formula matches say-hi's latest release again.
+          resolved-when: the formula matches say-hi's latest release
+          body-file: ${{ runner.temp }}/report.md
+
+      # the upsert's stand-in while issues are disabled (header)
+      - name: Fail on drift, since there is no issue to track it in
+        if: steps.issues.outputs.enabled != 'true' && steps.check.outputs.drift == 'true'
+        env:
+          TAP_VERSION: ${{ steps.check.outputs.tap }}
+          LATEST: ${{ steps.check.outputs.latest }}
+        run: |
+          set -euo pipefail
+          cat "$RUNNER_TEMP/report.md" >>"$GITHUB_STEP_SUMMARY"
+          echo "::error title=formula drift::Formula/say-hi.rb is v$TAP_VERSION but say-hi's latest release is v$LATEST - see the step summary (issues are disabled here, so no tracking issue)"
+          exit 1

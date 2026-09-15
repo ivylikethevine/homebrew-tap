@@ -1,0 +1,96 @@
+name: tests
+
+# Style, audit, install, and test for every formula change, on macOS and on
+# Homebrew on Linux. Formula PRs come from say-hi's release workflow, so this
+# is what a reviewer reads before merging one.
+#
+# Triggers: PRs (drafts skip), pushes to main so main's own state is known,
+# and dispatch for a re-check after a Homebrew update.
+# Permissions: read-only; setup-homebrew hands brew the job token for its
+# GitHub API calls (`audit --online`), which needs nothing more.
+
+on:
+  # ready_for_review is not a default type; without it a draft marked ready
+  # would never get a run
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# superseded PR pushes cancel their in-flight run; main never cancels
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  test:
+    name: brew style, audit, install, test (${{ matrix.os }})
+    if: github.event.pull_request.draft != true
+    strategy:
+      # one OS failing should not hide whether the other passes
+      fail-fast: false
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    steps:
+      # audit mode: records egress without blocking it (no allowlist yet)
+      - uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          egress-policy: audit
+
+      # Checks this repo out as a tap inside Homebrew and trusts it, so no
+      # actions/checkout step. Pinned to a dated release tag, the ref
+      # setup-homebrew's README recommends.
+      - id: setup
+        name: Set up Homebrew
+        uses: Homebrew/actions/setup-homebrew@1e34f2e2acaa766b7efacb8c26352e6abbb023f9 # 2026.09.13.1
+
+      - name: brew style
+        env:
+          TAP: ${{ steps.setup.outputs.tap-name }}
+        run: brew style "$TAP"
+
+      - name: brew audit --strict --online
+        env:
+          TAP: ${{ steps.setup.outputs.tap-name }}
+        run: brew audit --strict --online "$TAP/say-hi"
+
+      - name: brew install --build-from-source
+        env:
+          TAP: ${{ steps.setup.outputs.tap-name }}
+        run: brew install --build-from-source "$TAP/say-hi"
+
+      - name: brew test
+        env:
+          TAP: ${{ steps.setup.outputs.tap-name }}
+        run: brew test "$TAP/say-hi"
+
+      # uninstalling cleanly is part of what a user gets
+      - name: brew uninstall
+        env:
+          TAP: ${{ steps.setup.outputs.tap-name }}
+        run: brew uninstall "$TAP/say-hi"
+
+  # One stable check name for branch protection, whatever the matrix holds.
+  tests:
+    name: tests
+    needs: test
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          egress-policy: audit
+
+      - name: Fail unless every matrix leg passed or skipped
+        env:
+          RESULT: ${{ needs.test.result }}
+        run: |
+          echo "matrix result: $RESULT"
+          [ "$RESULT" = success ] || [ "$RESULT" = skipped ]
