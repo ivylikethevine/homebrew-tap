@@ -91,7 +91,7 @@ jobs:
           } >"$RUNNER_TEMP/report.md"
 
       - if: steps.issues.outputs.enabled == 'true'
-        uses: $/.github/actions/upsert-tracking-issue
+        uses: ./.github/actions/upsert-tracking-issue
         with:
           label: formula-drift
           label-color: D93F0B
