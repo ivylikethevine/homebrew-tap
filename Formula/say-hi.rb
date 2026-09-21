@@ -8,8 +8,8 @@ class SayHi < Formula
   # keep the "sshrc supercharged" phrasing, which no linter of theirs objects to
   desc "Your shell config, on every host you say hi to - sshrc supercharged"
   homepage "https://github.com/ivylikethevine/say-hi"
-  url "https://github.com/ivylikethevine/say-hi/releases/download/v0.4.7/say-hi-0.4.7.tar.gz"
-  sha256 "fc6292222efdb994b7f69e8888e5af0e0352d2a535591ccce217bdf167a21690"
+  url "https://github.com/ivylikethevine/say-hi/releases/download/v0.4.8/say-hi-0.4.8.tar.gz"
+  sha256 "0295b42982e46d8c391e0a28b5ab162a9345ee60dcdf0474a6fdc7eec1cea64f"
   license "MIT"
   head "https://github.com/ivylikethevine/say-hi.git", branch: "main"
 
@@ -34,7 +34,7 @@ class SayHi < Formula
     #
     # It must land in a directory named say-hi - every path in the project
     # resolves against $_HI_HOME/say-hi, so libexec is the _HI_HOME here.
-    (libexec/"say-hi").install "common", "scripts", "settings",
+    (libexec/"say-hi").install "common", "scripts", "config",
                                "hi.sh", "load.sh", "LICENSE.md", "README.md"
     chmod 0755, libexec/"say-hi/hi.sh"
 
