@@ -11,7 +11,7 @@ The Homebrew tap for [say-hi](https://github.com/ivylikethevine/say-hi).
 - `.github/workflows/drift.yml` runs weekly: `.github/scripts/formula_drift.sh`
   compares the formula's `url` version with say-hi's latest release, and a
   mismatch upserts one `formula-drift` issue via
-  `.github/actions/upsert-tracking-issue` (a copy of say-hi's) or, while
+  `.github/actions/upsert-tracking-issue` or, while
   issues are disabled here, fails the run.
 - Workflow `uses:` are SHA-pinned with a version comment, with
   `contents: read` permissions (drift.yml's job adds `issues: write`), and
