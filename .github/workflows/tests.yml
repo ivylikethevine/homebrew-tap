@@ -76,7 +76,8 @@ jobs:
   tests:
     name: tests
     needs: test
-    if: always()
+    # skipped on a draft like `test`; a skipped required check still passes
+    if: always() && github.event.pull_request.draft != true
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
