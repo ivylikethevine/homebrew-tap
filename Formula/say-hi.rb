@@ -8,8 +8,8 @@ class SayHi < Formula
   # keep the "sshrc supercharged" phrasing, which no linter of theirs objects to
   desc "Your shell config, on every host you say hi to - sshrc supercharged"
   homepage "https://github.com/ivylikethevine/say-hi"
-  url "https://github.com/ivylikethevine/say-hi/releases/download/v0.5.0/say-hi-0.5.0.tar.gz"
-  sha256 "eb787a66b2568726845c0911bd40858fea6d2dffed25cbd2ab8edd41a680e785"
+  url "https://github.com/ivylikethevine/say-hi/releases/download/v0.5.1/say-hi-0.5.1.tar.gz"
+  sha256 "e8dfe138a2acdd3a1aff8e032f94c8521f4eb26774ba8158a8f069c4ae0abf08"
   license "MIT"
   head "https://github.com/ivylikethevine/say-hi.git", branch: "main"
 
