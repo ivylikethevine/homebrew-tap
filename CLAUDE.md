@@ -14,7 +14,11 @@ The Homebrew tap for [say-hi](https://github.com/ivylikethevine/say-hi).
   `.github/actions/upsert-tracking-issue` or, while
   issues are disabled here, fails the run.
 - Workflow `uses:` are SHA-pinned with a version comment, with
-  `contents: read` permissions (drift.yml's job adds `issues: write`), and
-  every job starts with `step-security/harden-runner` in audit mode;
-  Dependabot moves the pins.
+  `contents: read` permissions (drift.yml's and tool-versions.yml's jobs add
+  `issues: write`), and every job starts with `step-security/harden-runner`,
+  in audit mode except tool-versions.yml's block.
+- `.github/workflows/tool-versions.yml` runs weekly:
+  `.github/scripts/check_tool_versions.sh` reports each action SHA behind
+  upstream in one tracking issue. Dependabot opens no version-update PR; every
+  bump is a hand edit.
 - PRs are squash-merged.
