@@ -13,7 +13,7 @@ on:
   # ready_for_review is not a default type; without it a draft marked ready
   # would never get a run
   pull_request:
-    branches: [main] # PRs into dev run nothing; dev is checked by its PR into main
+    branches: [main, dev] # dev: the sync PRs' commits are graded by this PR
     types: [opened, synchronize, reopened, ready_for_review]
   push:
     branches: [main]
