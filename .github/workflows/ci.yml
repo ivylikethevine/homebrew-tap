@@ -1,11 +1,13 @@
-name: tests
+name: CI
 
 # Style, audit, install, and test for every formula change, on macOS and on
-# Homebrew on Linux. Formula PRs come from say-hi's release workflow, so this
-# is what a reviewer reads before merging one.
+# Homebrew on Linux, plus a lint of the workflows and scripts themselves.
+# Formula PRs come from say-hi's release workflow, so this is what a reviewer
+# reads before merging one.
 #
 # Triggers: PRs (drafts skip), pushes to main so main's own state is known,
-# and dispatch for a re-check after a Homebrew update.
+# and dispatch for a re-check after a Homebrew update. tool-versions.yml chains
+# off a green run of this workflow on main, by its name.
 # Permissions: read-only; setup-homebrew hands brew the job token for its
 # GitHub API calls (`audit --online`), which needs nothing more.
 
@@ -24,7 +26,7 @@ permissions:
 
 # superseded PR pushes cancel their in-flight run; main never cancels
 concurrency:
-  group: tests-${{ github.ref }}
+  group: ci-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
@@ -73,10 +75,60 @@ jobs:
       - name: brew uninstall
         run: brew uninstall "$TAP/say-hi"
 
+  # The repo's own tooling: shellcheck over the scripts (.shellcheckrc),
+  # actionlint (which shells out to the same shellcheck for run: blocks),
+  # lint_workflows.sh's conventions (timeouts, checkout credentials,
+  # permissions, SHA pins, harden-runner first) and zizmor (.github/zizmor.yml).
+  # Each tool runs even when an earlier one failed, so one run shows every
+  # finding.
+  lint:
+    name: lint (shellcheck, actionlint, zizmor)
+    if: github.event.pull_request.draft != true
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: ./.github/actions/setup-tools
+        with:
+          tools: shellcheck actionlint zizmor
+
+      - id: shellcheck
+        name: Lint the scripts
+        continue-on-error: true
+        run: shellcheck -x .github/scripts/*.sh .github/actions/*/*.sh
+
+      - id: actionlint
+        name: Lint the workflows
+        continue-on-error: true
+        run: actionlint -color
+
+      - id: lint-workflows
+        name: Check the workflows' conventions
+        continue-on-error: true
+        run: .github/scripts/lint_workflows.sh
+
+      - id: zizmor
+        name: Audit the workflows
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: zizmor --no-progress .
+
+      - name: Fail if any found something
+        if: steps.shellcheck.outcome == 'failure' || steps.actionlint.outcome == 'failure' || steps.lint-workflows.outcome == 'failure' || steps.zizmor.outcome == 'failure'
+        run: exit 1
+
   # One stable check name for branch protection, whatever the matrix holds.
   tests:
     name: tests
-    needs: test
+    needs: [test, lint]
     # skipped on a draft like `test`; a skipped required check still passes
     if: always() && github.event.pull_request.draft != true
     runs-on: ubuntu-latest
@@ -86,9 +138,12 @@ jobs:
         with:
           egress-policy: audit
 
-      - name: Fail unless every matrix leg passed or skipped
+      - name: Fail unless every job passed or skipped
         env:
-          RESULT: ${{ needs.test.result }}
+          TEST: ${{ needs.test.result }}
+          LINT: ${{ needs.lint.result }}
         run: |
-          echo "matrix result: $RESULT"
-          [ "$RESULT" = success ] || [ "$RESULT" = skipped ]
+          echo "test: $TEST, lint: $LINT"
+          for r in "$TEST" "$LINT"; do
+            [ "$r" = success ] || [ "$r" = skipped ] || exit 1
+          done
