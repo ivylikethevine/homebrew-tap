@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MIT
 # The pinned CI tools, one row per tool - installed by ./install.sh (through
 # ./action.yml or ../setup-tools) and drift-checked by
 # ../../scripts/check_tool_versions.sh. Both read it through ./lib.sh, so a
@@ -50,9 +51,7 @@
 # Floating by design - tools this repo deliberately does not pin, and why.
 # Each is still named here so "is this pinned?" has one place to look:
 #
-#   brew, ruby   tests.yml (Homebrew/actions/setup-homebrew)   the tap is
-#                tested against current Homebrew on purpose: that is what a
-#                user installing from it runs
+#   none. The three rows below are the whole roster.
 
 # Installed rather than taken from the runner image, whose copy moves when the
 # image does and would change what shellcheck reports with no commit here.
