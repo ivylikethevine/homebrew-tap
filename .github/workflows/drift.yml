@@ -33,7 +33,7 @@ permissions:
 jobs:
   formula:
     name: formula version vs say-hi's latest release
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     permissions:
       contents: read
       issues: write # the one write: upsert (and close) its own tracking issue
