@@ -68,3 +68,28 @@ When they differ, the fix is merging the pending `say-hi-vX.Y.Z` pull request,
 or re-running the `tap` job of say-hi's release workflow if none was opened. The
 workflow tracks drift in one `formula-drift` issue while issues are enabled
 here, and fails its run otherwise.
+
+## Roadmap
+
+What this repo could take next, smallest first. An entry is deleted once its
+**Ticks when** holds.
+
+- [ ] **The per-file SPDX headers come out** — `REUSE.toml` (`path = "**"`)
+      and `LICENSES/MIT.txt` arrive with the next sync of the shared CI files
+      and cover every file, and the license is read from `LICENSE.md` alone,
+      so the `SPDX-License-Identifier` comment at the top of each file is
+      redundant. **Do:** strip it from this repo's own files and stop adding
+      it; the synced CI files change in their source, which the sync carries.
+      **Ticks when:** `git grep -l SPDX-License-Identifier` lists `REUSE.toml`
+      alone.
+
+- [ ] **A demo GIF** — a [VHS](https://github.com/charmbracelet/vhs) tape of
+      the install above (`brew tap`, `brew install say-hi`, `hi --install`,
+      then `brew upgrade say-hi` finding nothing to do) rendered to
+      `docs/demo.gif` and embedded under _Install_, in the style of
+      [say-hi's tapes](https://github.com/ivylikethevine/say-hi/tree/main/docs/tapes),
+      whose `common.tape` sets the look. The tape runs against a Linux
+      Homebrew in a container so it renders the same anywhere; a render by
+      hand to begin with, a workflow once the tape is stable. **Ticks when:**
+      the GIF is in the README and `vhs docs/demo.tape` reproduces it from a
+      clean checkout.
