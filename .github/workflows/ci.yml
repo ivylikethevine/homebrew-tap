@@ -102,7 +102,7 @@ jobs:
       - id: shellcheck
         name: Lint the scripts
         continue-on-error: true
-        run: shellcheck -x .github/scripts/*.sh .github/actions/*/*.sh
+        run: shellcheck -x .github/scripts/*.sh .github/actions/*/*.sh docs/demo/*.sh
 
       - id: actionlint
         name: Lint the workflows
