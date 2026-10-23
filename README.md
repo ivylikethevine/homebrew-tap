@@ -78,9 +78,9 @@ What this repo could take next, smallest first. An entry is deleted once its
       and `LICENSES/MIT.txt` arrive with the next sync of the shared CI files
       and cover every file, and the license is read from `LICENSE.md` alone,
       so the `SPDX-License-Identifier` comment at the top of each file is
-      redundant. **Do:** strip it from this repo's own files and stop adding
-      it; the synced CI files change in their source, which the sync carries.
-      **Ticks when:** `git grep -l SPDX-License-Identifier` lists `REUSE.toml`
+      redundant. This repo's own files no longer carry it (don't add it to new
+      ones); the rest are the synced CI files, which change in their source
+      and arrive with the sync. **Ticks when:** `git grep -l SPDX-License-Identifier` lists `REUSE.toml`
       alone.
 
 - [ ] **A demo GIF** — a [VHS](https://github.com/charmbracelet/vhs) tape of
