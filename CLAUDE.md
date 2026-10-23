@@ -23,4 +23,6 @@ The Homebrew tap for [say-hi](https://github.com/ivylikethevine/say-hi).
   `.github/scripts/check_tool_versions.sh` reports each action SHA and
   `tools.txt` pin behind upstream in one tracking issue. Dependabot opens no version-update PR; every
   bump is a hand edit.
+- `docs/demo.tape` renders the README's `docs/demo.gif` on the containers
+  `docs/demo/fixtures.sh` brings up; the render is a hand step.
 - PRs are squash-merged.

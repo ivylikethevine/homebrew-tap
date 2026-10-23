@@ -8,16 +8,23 @@ is described in
 
 ## Install
 
+![brew install ivylikethevine/tap/say-hi, hi --install, then hi web-prod into a server](docs/demo.gif)
+
 ```sh
 brew install ivylikethevine/tap/say-hi
 ```
 
-or tap first, then install by name:
+or tap first, then trust the formula and install it by name:
 
 ```sh
 brew tap ivylikethevine/tap
+brew trust --formula ivylikethevine/tap/say-hi
 brew install say-hi
 ```
+
+Homebrew 6 and later load a formula from a tap outside Homebrew's own only
+once it is trusted; the full name in the first form trusts say-hi as it
+installs.
 
 Homebrew puts `hi` on your `PATH`; wire it into your own shells once with:
 
@@ -74,22 +81,9 @@ here, and fails its run otherwise.
 What this repo could take next, smallest first. An entry is deleted once its
 **Ticks when** holds.
 
-- [ ] **The per-file SPDX headers come out** — `REUSE.toml` (`path = "**"`)
-      and `LICENSES/MIT.txt` arrive with the next sync of the shared CI files
-      and cover every file, and the license is read from `LICENSE.md` alone,
-      so the `SPDX-License-Identifier` comment at the top of each file is
-      redundant. This repo's own files no longer carry it (don't add it to new
-      ones); the rest are the synced CI files, which change in their source
-      and arrive with the sync. **Ticks when:** `git grep -l SPDX-License-Identifier` lists `REUSE.toml`
-      alone.
-
-- [ ] **A demo GIF** — a [VHS](https://github.com/charmbracelet/vhs) tape of
-      the install above (`brew tap`, `brew install say-hi`, `hi --install`,
-      then `brew upgrade say-hi` finding nothing to do) rendered to
-      `docs/demo.gif` and embedded under _Install_, in the style of
-      [say-hi's tapes](https://github.com/ivylikethevine/say-hi/tree/main/docs/tapes),
-      whose `common.tape` sets the look. The tape runs against a Linux
-      Homebrew in a container so it renders the same anywhere; a render by
-      hand to begin with, a workflow once the tape is stable. **Ticks when:**
-      the GIF is in the README and `vhs docs/demo.tape` reproduces it from a
-      clean checkout.
+- [ ] **A demo GIF** — `docs/demo.tape` installs say-hi on a Mac-dressed
+      Linux Homebrew (`docs/demo/`), runs `hi --install --preset balanced`,
+      and checks a server's deployed checkout over `hi web-prod`; _Install_
+      embeds its `docs/demo.gif`. A render by hand to begin with, a workflow
+      once the tape is stable. **Ticks when:** `docs/demo.gif` is committed
+      and `vhs docs/demo.tape` reproduces it from a clean checkout.
