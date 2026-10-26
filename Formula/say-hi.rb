@@ -8,8 +8,8 @@ class SayHi < Formula
   # keep the "sshrc supercharged" phrasing, which no linter of theirs objects to
   desc "Your shell config, on every host you say hi to - sshrc supercharged"
   homepage "https://github.com/ivylikethevine/say-hi"
-  url "https://github.com/ivylikethevine/say-hi/releases/download/v0.7.1/say-hi-0.7.1.tar.gz"
-  sha256 "6f6b9432c5c4e5bf855d3955c127bdd8f8b86e479864330f619a08e660810438"
+  url "https://github.com/ivylikethevine/say-hi/releases/download/v0.8.0/say-hi-0.8.0.tar.gz"
+  sha256 "b8e7867fb4e2b73ae616ffa3192c0b86805c7411959a5b5ed72b2096bc6afe30"
   license "MIT"
   head "https://github.com/ivylikethevine/say-hi.git", branch: "main"
 
@@ -96,5 +96,10 @@ class SayHi < Formula
 
     # ...and that the wrapper exports it for a caller who has not.
     assert_match libexec.to_s, (bin/"hi").read
+
+    # What a user runs: the wrapper starts hi, which answers with the stamped
+    # version from the keg.
+    assert_match "#{version} (package at #{libexec}/say-hi)", shell_output("#{bin}/hi --version")
+    assert_path_exists man1/"hi.1"
   end
 end
