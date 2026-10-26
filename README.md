@@ -80,10 +80,3 @@ here, and fails its run otherwise.
 
 What this repo could take next, smallest first. An entry is deleted once its
 **Ticks when** holds.
-
-- [ ] **A demo GIF** — `docs/demo.tape` installs say-hi on a Mac-dressed
-      Linux Homebrew (`docs/demo/`), runs `hi --install --preset balanced`,
-      and checks a server's deployed checkout over `hi web-prod`; _Install_
-      embeds its `docs/demo.gif`. A render by hand to begin with, a workflow
-      once the tape is stable. **Ticks when:** `docs/demo.gif` is committed
-      and `vhs docs/demo.tape` reproduces it from a clean checkout.
