@@ -10,6 +10,8 @@ The Homebrew tap for [say-hi](https://github.com/ivylikethevine/say-hi).
   `brew uninstall` on macOS and Linux, and a `lint` job: shellcheck over the
   scripts, actionlint, `.github/scripts/lint_workflows.sh` and zizmor over the
   workflows, with the tools pinned in `.github/actions/setup-tool/tools.txt`.
+  The brew jobs wait on `lint`, and run only when the formula, a `*.sh` or
+  `ci.yml` changed, or on a dispatch.
 - `.github/workflows/drift.yml` runs weekly: `.github/scripts/formula_drift.sh`
   compares the formula's `url` version with say-hi's latest release, and a
   mismatch upserts one `formula-drift` issue via
