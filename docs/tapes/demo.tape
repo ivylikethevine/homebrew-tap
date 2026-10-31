@@ -1,10 +1,10 @@
 # The README's demo: install say-hi with Homebrew on a Mac, then use it for a
 # check every deploy ends in, whether prod runs what was merged. Render with
-# `vhs docs/demo.tape` (https://github.com/charmbracelet/vhs) from the repo
+# `vhs docs/tapes/demo.tape` (https://github.com/charmbracelet/vhs) from the repo
 # root, with docker running; the first render builds both images, and
-# `docs/demo/fixtures.sh down` clears the stage after.
+# `docs/tapes/fixtures.sh down` clears the stage after.
 #
-# The Mac is a Linux Homebrew in a container (docs/demo/mac.Dockerfile), so the
+# The Mac is a Linux Homebrew in a container (docs/tapes/mac.Dockerfile), so the
 # render is the same on any machine; the window, palette and prompt are
 # macOS's. The install is the live tap's `main` and say-hi's latest release.
 #
@@ -13,7 +13,7 @@
 # sleeps are reading time only. The session's exit waits on /Disconnected/,
 # which hi prints as the session ends.
 
-Output docs/demo.gif
+Output docs/tapes/demo.gif
 
 Require docker
 
@@ -34,7 +34,7 @@ Set TypingSpeed 40ms
 Set Theme { "name": "Terminal Basic Dark", "black": "#000000", "red": "#c65339", "green": "#6ac44b", "yellow": "#b8b74a", "blue": "#6444ed", "purple": "#d357db", "cyan": "#69c1cf", "white": "#d1d1d1", "brightBlack": "#909090", "brightRed": "#eb5a3a", "brightGreen": "#77ea51", "brightYellow": "#efef53", "brightBlue": "#d09af9", "brightPurple": "#eb5af7", "brightCyan": "#78f1f2", "brightWhite": "#ededed", "background": "#1d1e1d", "foreground": "#ffffff", "cursor": "#9d9d9d", "selection": "#3f638a" }
 
 Hide
-Type "docs/demo/fixtures.sh up >/tmp/tap-demo.log 2>&1 && echo fixture-o''k"
+Type "docs/tapes/fixtures.sh up >/tmp/tap-demo.log 2>&1 && echo fixture-o''k"
 Enter
 Wait+Screen@900s /fixture-ok/
 # a login zsh in the Mac, opened the way Terminal opens a window

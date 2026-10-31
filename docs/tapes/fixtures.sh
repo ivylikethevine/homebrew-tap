@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# The stage docs/demo.tape renders on: the Mac-dressed client and the server it
+# The stage docs/tapes/demo.tape renders on: the Mac-dressed client and the server it
 # connects to, on one docker network. Everything carries the tap.demo=1 label,
 # so `down` removes what a crashed render left.
 #
-#   docs/demo/fixtures.sh up
-#   docs/demo/fixtures.sh down
+#   docs/tapes/fixtures.sh up
+#   docs/tapes/fixtures.sh down
 set -euo pipefail
 
 dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

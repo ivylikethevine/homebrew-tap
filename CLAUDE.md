@@ -6,7 +6,7 @@ The Homebrew tap for [say-hi](https://github.com/ivylikethevine/say-hi).
   `packaging/homebrew/say-hi.rb`, which opens a PR here per release. Make
   formula changes there; an edit here is overwritten by the next release.
 - CI (`.github/workflows/ci.yml`) runs `brew style`, `brew audit --strict
-  --online`, `brew install --build-from-source`, `brew test`, and
+--online`, `brew install --build-from-source`, `brew test`, and
   `brew uninstall` on macOS and Linux, and a `lint` job: shellcheck over the
   scripts, actionlint, `.github/scripts/lint_workflows.sh` and zizmor over the
   workflows, with the tools pinned in `.github/actions/setup-tool/tools.txt`.
@@ -23,6 +23,6 @@ The Homebrew tap for [say-hi](https://github.com/ivylikethevine/say-hi).
   `.github/scripts/check_tool_versions.sh` reports each action SHA and
   `tools.txt` pin behind upstream in one tracking issue. Dependabot opens no version-update PR; every
   bump is a hand edit.
-- `docs/demo.tape` renders the README's `docs/demo.gif` on the containers
-  `docs/demo/fixtures.sh` brings up; the render is a hand step.
+- `docs/tapes/demo.tape` renders the README's `docs/tapes/demo.gif` on the containers
+  `docs/tapes/fixtures.sh` brings up; the render is a hand step.
 - PRs are squash-merged.

@@ -8,7 +8,7 @@ is described in
 
 ## Install
 
-![brew install ivylikethevine/tap/say-hi, hi --install, then hi web-prod into a server](docs/demo.gif)
+![brew install ivylikethevine/tap/say-hi, hi --install, then hi web-prod into a server](docs/tapes/demo.gif)
 
 ```sh
 brew install ivylikethevine/tap/say-hi
@@ -78,5 +78,4 @@ here, and fails its run otherwise.
 
 ## Roadmap
 
-What this repo could take next, smallest first. An entry is deleted once its
-**Ticks when** holds.
+[docs/ROADMAP.md](docs/ROADMAP.md).
