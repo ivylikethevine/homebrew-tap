@@ -7,7 +7,9 @@ name: CI
 #
 # Triggers: PRs (drafts skip), pushes to main so main's own state is known,
 # and dispatch for a re-check after a Homebrew update. tool-versions.yml chains
-# off a green run of this workflow on main, by its name.
+# off a green run of this workflow on main, by its name. The brew jobs run when
+# the lint job's filter says something brew reads changed, and always on a
+# dispatch.
 # Permissions: read-only; setup-homebrew hands brew the job token for its
 # GitHub API calls (`audit --online`), which needs nothing more.
 
@@ -32,7 +34,8 @@ concurrency:
 jobs:
   test:
     name: brew style, audit, install, test (${{ matrix.os }})
-    if: github.event.pull_request.draft != true
+    needs: lint
+    if: needs.lint.outputs.brew == 'true'
     strategy:
       # one OS failing should not hide whether the other passes
       fail-fast: false
@@ -86,6 +89,12 @@ jobs:
     if: github.event.pull_request.draft != true
     runs-on: ubuntu-26.04
     timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: read # the paths filter lists a pull request's files through the API
+    # A dispatch has no diff to filter, so it counts as a change.
+    outputs:
+      brew: ${{ steps.filter.outputs.brew || 'true' }}
     steps:
       - uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
         with:
@@ -94,6 +103,18 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+
+      # What the brew jobs read: the formula, every *.sh (`brew style` lints each
+      # one in the tap), and the job that runs them.
+      - id: filter
+        if: github.event_name == 'push' || github.event_name == 'pull_request'
+        uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+        with:
+          filters: |
+            brew:
+              - 'Formula/**'
+              - '**/*.sh'
+              - '.github/workflows/ci.yml'
 
       - uses: ./.github/actions/setup-tools
         with:
