@@ -8,8 +8,8 @@ class SayHi < Formula
   # keep the "sshrc supercharged" phrasing, which no linter of theirs objects to
   desc "Your shell config, on every host you say hi to - sshrc supercharged"
   homepage "https://github.com/ivylikethevine/say-hi"
-  url "https://github.com/ivylikethevine/say-hi/releases/download/v0.8.4/say-hi-0.8.4.tar.gz"
-  sha256 "b2b64e1d8bad94ecd13a14442c2b7cbfd382d507ffd337e5be8be94a06251c44"
+  url "https://github.com/ivylikethevine/say-hi/releases/download/v0.8.5/say-hi-0.8.5.tar.gz"
+  sha256 "827c6956760ad313fdaf9c3c7b6ee62a42730cacaf67f7a820e8a9b194903801"
   license "MIT"
   head "https://github.com/ivylikethevine/say-hi.git", branch: "main"
 
@@ -83,7 +83,7 @@ class SayHi < Formula
       That writes only to your rc files and ~/.config/say-hi - never into the keg,
       and it makes no link of its own: Homebrew's `hi` already runs this tree.
 
-      Re-run it as `hi --configure` any time to revisit the feature toggles.
+      Re-run it as `hi --configure` any time to revisit the settings.
       `hi --update` will tell you to update through Homebrew, which is correct -
       run `brew upgrade say-hi` instead.
     EOS
