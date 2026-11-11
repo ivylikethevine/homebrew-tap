@@ -20,7 +20,8 @@ The Homebrew tap for [say-hi](https://github.com/ivylikethevine/say-hi).
 - Workflow `uses:` are SHA-pinned with a version comment, with
   `contents: read` permissions (drift.yml's and tool-versions.yml's jobs add
   `issues: write`), and every job starts with `step-security/harden-runner`,
-  in audit mode except tool-versions.yml's block.
+  in audit mode except tool-versions.yml's block and the macOS leg of
+  ci.yml's `test`.
 - `.github/workflows/tool-versions.yml` runs weekly:
   `.github/scripts/check_tool_versions.sh` reports each action SHA and
   `tools.txt` pin behind upstream in one tracking issue. Dependabot opens no version-update PR; every
