@@ -44,10 +44,24 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     steps:
-      # audit mode: records egress without blocking it (no allowlist yet)
+      # block on macOS, off that leg's own audit log: Homebrew's checkout and
+      # API, the bottles and gems `brew style` and `brew test` pull, GitHub's
+      # API for `audit --online`, and the formula's release tarball. The Apple
+      # services macOS calls on its own are left out. The Linux leg stays on
+      # audit, which ignores the list, until it has an allowlist of its own.
+      # One step: an action's `pre` (where harden-runner starts its agent)
+      # ignores the step's `if:`.
       - uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
-          egress-policy: audit
+          egress-policy: ${{ runner.os == 'macOS' && 'block' || 'audit' }}
+          allowed-endpoints: >
+            github.com:443
+            api.github.com:443
+            release-assets.githubusercontent.com:443
+            formulae.brew.sh:443
+            ghcr.io:443
+            pkg-containers.githubusercontent.com:443
+            index.rubygems.org:443
 
       # Checks this repo out as a tap inside Homebrew and trusts it, so no
       # actions/checkout step. Pinned to a dated release tag, the ref
