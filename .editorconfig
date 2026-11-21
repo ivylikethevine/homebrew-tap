@@ -17,6 +17,11 @@ indent_size = 4
 [*.rs]
 indent_size = 4
 
+# plan-scan is kept byte for byte with copies elsewhere whose style indents case
+# branches
+[plan-scan]
+switch_case_indent = true
+
 # brew style owns these scripts' layout (`then` and `do` on their own line),
 # which plain shfmt would undo; shfmt honors `ignore` only when it walks a
 # directory, so a format-on-save of one file must skip what `shfmt -f .` skips

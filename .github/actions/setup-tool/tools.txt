@@ -60,3 +60,6 @@ actionlint|1.7.12|tar.gz|https://github.com/rhysd/actionlint/releases/download/v
 # workflows' inline ignores hold on this version, and another can read them
 # differently (1.31.0 missed one on `on:` that 1.31.1 honours).
 zizmor|1.32.0|tar.gz|https://github.com/zizmorcore/zizmor/releases/download/v%v/zizmor-x86_64-unknown-linux-gnu.tar.gz|--version|github:zizmorcore/zizmor||bb110cc765eca9cd7efb2e284a956be5974c60027b0970f16397d86208a9957b
+# For .claude/plan-scan, whose patterns need PCRE2: the musl release is built
+# with it, where the runner image's apt ripgrep may not be.
+rg|15.2.0|tar.gz|https://github.com/BurntSushi/ripgrep/releases/download/%v/ripgrep-%v-x86_64-unknown-linux-musl.tar.gz|--pcre2-version|github:BurntSushi/ripgrep||33e15bcf1624b25cdd2a55813a47a2f95dbe126268203e76aa6a585d1e7b149c
