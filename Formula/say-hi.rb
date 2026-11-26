@@ -8,8 +8,8 @@ class SayHi < Formula
   # keep the "sshrc supercharged" phrasing, which no linter of theirs objects to
   desc "Your shell config, on every host you say hi to - sshrc supercharged"
   homepage "https://github.com/ivylikethevine/say-hi"
-  url "https://github.com/ivylikethevine/say-hi/releases/download/v0.8.7/say-hi-0.8.7.tar.gz"
-  sha256 "4546a209a41e25e5983e885f0617dcc02a59cdb472bcecc94c4ef09a07c1ef59"
+  url "https://github.com/ivylikethevine/say-hi/releases/download/v0.8.8/say-hi-0.8.8.tar.gz"
+  sha256 "ab88852504954669131b4985c52a805aaf62336af6cd9f29497c8d4f0eef63a5"
   license "MIT"
   head "https://github.com/ivylikethevine/say-hi.git", branch: "main"
 
@@ -51,8 +51,8 @@ class SayHi < Formula
     # This list is _HI_PACKAGE_CONTENTS in scripts/install.sh, repeated because
     # a formula cannot call install.sh: install_tree hardcodes /usr/bin and
     # /etc/profile.d, neither of which exists inside a brew prefix. The
-    # packaging suite (tests/packaging/packaging_test.sh) fails if the two lists
-    # drift apart.
+    # packaging_ci suite (tests/packaging/packaging_ci_test.sh) fails if the two
+    # lists drift apart.
     #
     # It must land in a directory named say-hi - every path in the project
     # resolves against $_HI_HOME/say-hi, so libexec is the _HI_HOME here.
